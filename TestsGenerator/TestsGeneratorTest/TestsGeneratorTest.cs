@@ -56,7 +56,7 @@ namespace TestsGeneratorTest
                 .OfType<NamespaceDeclarationSyntax>().Select(item => item.Name.ToString()).ToArray();
 
             Assert.AreEqual(namespaces.Length, 1);
-            Assert.AreEqual(namespaces[0], "UnitTests");
+            Assert.AreEqual(namespaces[0], "ListGeneratorUnitTests");
         }
 
 
