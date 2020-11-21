@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace TestsGenerator
 
 {
-    public class TestGenerator
+    public static class TestGenerator
     {
         private static readonly AttributeSyntax TestMethodAttribute =
             SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestMethod"));
