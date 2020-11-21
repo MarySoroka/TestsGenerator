@@ -27,7 +27,7 @@ namespace TestsGeneratorConsole.Data
 
 
             var processingBlock = new TransformManyBlock<string, TestClassInfo>(
-                async code => await Task.Run(() => _generator.Generate(code)),
+                async code => await Task.Run(() => TestGenerator.Generate(code)),
                 new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = _pipelineConfiguration.MaxTasks});
 
             var writingBlock = new ActionBlock<TestClassInfo>(
