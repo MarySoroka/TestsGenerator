@@ -8,7 +8,6 @@ namespace TestsGeneratorConsole.Data
 {
     public class Pipeline
     {
-        private readonly TestGenerator _generator = new TestGenerator();
 
         private readonly PipelineConfiguration _pipelineConfiguration;
 
