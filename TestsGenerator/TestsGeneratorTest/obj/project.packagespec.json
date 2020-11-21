@@ -15,7 +15,11 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "projectReferences": {}
+        "projectReferences": {
+          "C:\\Users\\Maria\\Documents\\mpp\\TestsGenerator\\TestsGenerator\\TestsGenerator\\TestsGenerator.csproj": {
+            "projectPath": "C:\\Users\\Maria\\Documents\\mpp\\TestsGenerator\\TestsGenerator\\TestsGenerator\\TestsGenerator.csproj"
+          }
+        }
       }
     },
     "warningProperties": {
