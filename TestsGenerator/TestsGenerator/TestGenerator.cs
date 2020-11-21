@@ -1,76 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace TestsGenerator
 
-{   public class TestGenerator
+{
+    public class TestGenerator
     {
-        private static AttributeSyntax TestMethodAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestMethod"));
+        private static readonly AttributeSyntax TestMethodAttribute =
+            SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestMethod"));
 
-        private static AttributeSyntax TestClassAttribute = SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestClass"));
+        private static readonly AttributeSyntax TestClassAttribute =
+            SyntaxFactory.Attribute(SyntaxFactory.ParseName("TestClass"));
 
-        public TestClassInfo[] Generate(string content)
+        public static TestClassInfo[] Generate(string content)
         {
-            List<TestClassInfo> generatedTests = new List<TestClassInfo>();
-
-            SyntaxNode treeRoot = CSharpSyntaxTree.ParseText(content).GetRoot();
-
-            foreach (var userClass in treeRoot.DescendantNodes().OfType<ClassDeclarationSyntax>())
-            {
-
-                string className = userClass.Identifier.ValueText;
-
-                NamespaceDeclarationSyntax currentNamespace = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(className+"UnitTests"));
-
-                ClassDeclarationSyntax classSignature = SyntaxFactory.ClassDeclaration($"{className}Test").
-                    AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword)).
-                    AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(TestClassAttribute)));
-
-                var classMethods = userClass.DescendantNodes().OfType<MethodDeclarationSyntax>().Where(method => method.Modifiers.Any(SyntaxKind.PublicKeyword));
-                List<MethodDeclarationSyntax> generatedMethods = new List<MethodDeclarationSyntax>();
-
-                foreach(var method in classMethods)
-                    generatedMethods.Add(CreateMethod($"Test{method.Identifier.ValueText}"));
-
-                var classCode = SyntaxFactory.CompilationUnit().
-                    AddUsings(CreateUsings(treeRoot)).
-                    AddMembers(currentNamespace.
-                    AddMembers(classSignature.
-                    AddMembers(generatedMethods.ToArray())));
-
-
-                generatedTests.Add(new TestClassInfo(className, classCode.NormalizeWhitespace().ToFullString()));
-            }
-
-
-            return generatedTests.ToArray();
+            var treeRoot = CSharpSyntaxTree.ParseText(content).GetRoot();
+            return (from userClass in treeRoot.DescendantNodes().OfType<ClassDeclarationSyntax>()
+                let className = userClass.Identifier.ValueText
+                let currentNamespace =
+                    SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(className + "UnitTests"))
+                let classSignature = SyntaxFactory.ClassDeclaration($"{className}Test")
+                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                    .AddAttributeLists(
+                        SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(TestClassAttribute)))
+                let classMethods = Enumerable.OfType<MethodDeclarationSyntax>(userClass.DescendantNodes())
+                    .Where(method => method.Modifiers.Any(SyntaxKind.PublicKeyword))
+                let classCode = SyntaxFactory.CompilationUnit()
+                    .AddUsings(CreateUsing(treeRoot))
+                    .AddMembers(currentNamespace.AddMembers(classSignature.AddMembers(classMethods
+                        .Select(method => CreateMethod($"Test{method.Identifier.ValueText}")).ToArray())))
+                select new TestClassInfo(className, classCode.NormalizeWhitespace().ToFullString())).ToArray();
         }
 
 
-        private UsingDirectiveSyntax[]  CreateUsings(SyntaxNode root)
+        private static UsingDirectiveSyntax[] CreateUsing(SyntaxNode root)
         {
-            string classNamespace = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().Single().Name.ToString();
-           
-            return root.DescendantNodes().OfType<UsingDirectiveSyntax>().              
-                Append(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(classNamespace))).
-                Append(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Microsoft.VisualStudio.TestTools.UnitTesting"))).
-                ToArray();
+            var classNamespace = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().Single().Name.ToString();
+            return root.DescendantNodes().OfType<UsingDirectiveSyntax>()
+                .Append(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(classNamespace)))
+                .Append(SyntaxFactory.UsingDirective(
+                    SyntaxFactory.ParseName("Microsoft.VisualStudio.TestTools.UnitTesting"))).ToArray();
         }
 
-        private MethodDeclarationSyntax CreateMethod( string methodName)
+        private static MethodDeclarationSyntax CreateMethod(string methodName)
         {
-            MethodDeclarationSyntax method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName("void"), methodName).
-                AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword)).
-                AddBodyStatements(SyntaxFactory.ParseStatement("Assert.Fail(\"autogenerated\");")).
-                AddAttributeLists(SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(TestMethodAttribute)));
+            var method = SyntaxFactory.MethodDeclaration(SyntaxFactory.ParseTypeName("void"), methodName)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddBodyStatements(SyntaxFactory.ParseStatement("Assert.Fail(\"autogenerated\");")).AddAttributeLists(
+                    SyntaxFactory.AttributeList(SyntaxFactory.AttributeList().Attributes.Add(TestMethodAttribute)));
 
             return method;
         }
-
     }
-    
 }
