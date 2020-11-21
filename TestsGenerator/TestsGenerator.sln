@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsGenerator", "TestsGenerator\TestsGenerator.csproj", "{4F743343-5796-4C7E-84D5-DE264AA95E8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsGeneratorConsole", "TestsGeneratorConsole\TestsGeneratorConsole.csproj", "{727C1A14-DE46-4191-80C6-1795B21A911D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsGeneratorTest", "TestsGeneratorTest\TestsGeneratorTest.csproj", "{199D5D1B-E954-4E41-86FA-AE9198D8DD86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{4F743343-5796-4C7E-84D5-DE264AA95E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F743343-5796-4C7E-84D5-DE264AA95E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F743343-5796-4C7E-84D5-DE264AA95E8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{727C1A14-DE46-4191-80C6-1795B21A911D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{727C1A14-DE46-4191-80C6-1795B21A911D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{727C1A14-DE46-4191-80C6-1795B21A911D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{727C1A14-DE46-4191-80C6-1795B21A911D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199D5D1B-E954-4E41-86FA-AE9198D8DD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199D5D1B-E954-4E41-86FA-AE9198D8DD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199D5D1B-E954-4E41-86FA-AE9198D8DD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199D5D1B-E954-4E41-86FA-AE9198D8DD86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
